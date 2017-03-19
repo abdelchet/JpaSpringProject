@@ -1,0 +1,48 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+ 
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.atos.dao.impl" />
+
+	<bean id="entityManagerFactory"  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
+		<property name="persistenceUnitName" value="JpaDB" />
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" ></property>
+	</bean>
+	
+<!-- 	<bean id="applicationDao" class="src.com.atos.dao.impl.ApplicationDaoImpl" /> -->
+<!-- 	<bean id="compteDao" class="src.com.atos.dao.impl.CompteDaoImpl" /> -->
+<!-- 	<bean id="personneDao" class="src.com.atos.dao.impl.PersonneDaoImpl" /> -->
+	<bean id="personneService" class="com.atos.service.impl.PersonneServiceImpl">
+		<constructor-arg ref="personneDao" />
+	</bean>
+	<bean id="applicationService" class="com.atos.service.impl.ApplicationServiceImpl">
+		<constructor-arg ref="applicationDao" />
+	</bean>
+	
+	<bean id="compteService" class="com.atos.service.impl.CompteServiceImpl">
+		<constructor-arg ref="compteDao" />
+	</bean>
+	
+	<aop:aspectj-autoproxy />
+	
+		<!-- Aspect -->
+	<bean id="logAspect" class="com.atos.aspect.LoggingAspect" />
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+</beans>
